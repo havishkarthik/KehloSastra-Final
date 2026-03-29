@@ -170,6 +170,12 @@ img { max-width: 100%; display: block; }
 
 .brand-icon { font-size: 1.4rem; }
 
+.nav-logo {
+  height: 38px;
+  width: auto;
+  display: block;
+}
+
 .nav-links {
   display: flex;
   align-items: center;
@@ -810,6 +816,7 @@ img { max-width: 100%; display: block; }
   gap: 10px;
   color: #fff;
   font-size: 1.1rem;
+  flex-direction: column;
 }
 
 .footer-brand .brand-icon { font-size: 1.4rem; }
@@ -818,6 +825,13 @@ img { max-width: 100%; display: block; }
   color: rgba(255,255,255,.45);
   font-size: .78rem;
   margin-left: 4px;
+}
+
+.footer-logo {
+  height: 36px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
 }
 
 .footer-links {
@@ -908,4 +922,6 @@ img { max-width: 100%; display: block; }
   .availability-card { padding: 28px 20px; }
 
   .contact-card { padding: 28px 18px; }
+
+  .nav-logo { height: 32px; }
 }

@@ -168,7 +168,9 @@ def admin_bookings():
 # Entry point
 # ---------------------------------------------------------------------------
 
+# Initialise the database on startup (works with both `python app.py` and gunicorn)
+init_db()
+
 if __name__ == "__main__":
-    init_db()
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=False)

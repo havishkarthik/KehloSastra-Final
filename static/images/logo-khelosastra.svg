@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none" role="img" aria-label="KehloSastra">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icon: rounded square with trophy -->
+  <rect x="0" y="0" width="48" height="48" rx="12" fill="url(#bg-grad)"/>
+
+  <!-- Trophy shape -->
+  <!-- Cup body -->
+  <rect x="16" y="11" width="16" height="14" rx="3" fill="white" opacity="0.95"/>
+  <!-- Cup handles -->
+  <rect x="12" y="13" width="4" height="8" rx="2" fill="white" opacity="0.7"/>
+  <rect x="32" y="13" width="4" height="8" rx="2" fill="white" opacity="0.7"/>
+  <!-- Stem -->
+  <rect x="22" y="25" width="4" height="5" rx="1" fill="white" opacity="0.95"/>
+  <!-- Base -->
+  <rect x="16" y="30" width="16" height="3.5" rx="1.75" fill="white" opacity="0.95"/>
+  <!-- Star highlight -->
+  <circle cx="24" cy="18" r="2.5" fill="#fbbf24"/>
+
+  <!-- Wordmark -->
+  <text x="58" y="21" font-family="'Poppins', 'Segoe UI', sans-serif" font-size="16" font-weight="700" fill="#1e40af" letter-spacing="-0.3">Kehlo</text>
+  <text x="107" y="21" font-family="'Poppins', 'Segoe UI', sans-serif" font-size="16" font-weight="300" fill="#0f172a" letter-spacing="-0.3">Sastra</text>
+  <text x="58" y="36" font-family="'Poppins', 'Segoe UI', sans-serif" font-size="8.5" font-weight="600" fill="#64748b" letter-spacing="1.5">CAMPUS SPORTS</text>
+</svg>
