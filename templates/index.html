@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
 <body>
 
@@ -15,7 +15,7 @@
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="#home" class="nav-brand">
-        <img src="/static/images/logo-khelosastra.svg" alt="KehloSastra" class="nav-logo" height="38" />
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="KehloSastra" class="nav-logo" height="38" />
       </a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
@@ -328,7 +328,7 @@
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-brand">
-        <img src="/static/images/logo-khelosastra.svg" alt="KehloSastra" class="footer-logo" height="36" />
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="KehloSastra" class="footer-logo" height="36" />
         <p>Campus Sports Booking · SASTRA University</p>
       </div>
       <div class="footer-links">
@@ -338,16 +338,12 @@
         <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
       </div>
-      <div class="footer-kadali">
-        <p>Powered by</p>
-        <img src="/static/images/logo-kadali.svg" alt="Kadali" class="kadali-logo" height="28" />
-      </div>
       <div class="footer-copy">
         <p>© 2024 KehloSastra. Built for SASTRA University students.</p>
       </div>
     </div>
   </footer>
 
-  <script src="/static/js/app.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
