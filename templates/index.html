@@ -1,351 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KehloSastra – Campus Sports Booking</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/css/style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kehlosastra – Campus Sports Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- ===== NAVBAR ===== -->
-  <nav class="navbar" id="navbar">
+<!-- ── Navigation ── -->
+<nav class="navbar">
     <div class="nav-container">
-      <a href="#home" class="nav-brand">
-        <span class="brand-icon">🏆</span>
-        KehloSastra
-      </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#home"     class="nav-link">Home</a></li>
-        <li><a href="#features" class="nav-link">Features</a></li>
-        <li><a href="#book"     class="nav-link">Book</a></li>
-        <li><a href="#faq"      class="nav-link">FAQ</a></li>
-        <li><a href="#contact"  class="nav-link">Contact</a></li>
-        <li><a href="#book"     class="nav-btn btn-primary">Book Now</a></li>
-      </ul>
+        <a href="{{ url_for('index') }}" class="nav-brand">
+            <img src="{{ url_for('static', filename='kehlosastra-logo.png') }}" alt="KehloSastra" class="brand-logo" />
+            <span class="brand-text">KehloSastra</span>
+        </a>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+            {% if session.user_id %}
+                <a href="{{ url_for('create') }}" class="nav-link btn-nav-create">+ Create Game</a>
+                <span class="nav-user">👤 {{ session.user_name }}</span>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                <a href="{{ url_for('register') }}" class="nav-link btn-nav-register">Register</a>
+            {% endif %}
+        </div>
     </div>
-  </nav>
+</nav>
 
-  <!-- ===== HERO SECTION ===== -->
-  <section class="hero" id="home">
-    <div class="hero-container">
-      <div class="hero-content">
-        <span class="hero-badge">🏟️ SASTRA University · Official Booking</span>
-        <h1 class="hero-heading">
-          Book Your Campus<br />
-          <span class="gradient-text">Sports Easily</span>
-        </h1>
-        <p class="hero-sub">
-          Reserve courts without conflicts.<br />Fast, simple, reliable.
-        </p>
-        <div class="hero-actions">
-          <a href="#book"         class="btn btn-primary btn-lg">Book Now</a>
-          <a href="#availability" class="btn btn-outline btn-lg">Check Availability</a>
-        </div>
-        <div class="hero-stats">
-          <div class="stat"><strong>6+</strong><span>Sports</span></div>
-          <div class="stat-divider"></div>
-          <div class="stat"><strong>24/7</strong><span>Booking</span></div>
-          <div class="stat-divider"></div>
-          <div class="stat"><strong>0</strong><span>Conflicts</span></div>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <div class="phone-mockup">
-          <div class="phone-frame">
-            <div class="phone-notch"></div>
-            <div class="phone-screen">
-              <div class="app-preview">
-                <div class="preview-header">
-                  <span class="preview-title">KehloSastra</span>
-                  <span class="preview-dot"></span>
+<!-- ── Flash Messages ── -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">
+                    <span>{{ message }}</span>
+                    <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
                 </div>
-                <div class="preview-card active-booking">
-                  <div class="pc-sport">🏸 Badminton</div>
-                  <div class="pc-time">10:00 – 11:30</div>
-                  <div class="pc-status confirmed">Confirmed ✓</div>
-                </div>
-                <div class="preview-card">
-                  <div class="pc-sport">⚽ Football</div>
-                  <div class="pc-time">14:00 – 15:30</div>
-                  <div class="pc-status available">Available</div>
-                </div>
-                <div class="preview-card">
-                  <div class="pc-sport">🏏 Cricket</div>
-                  <div class="pc-time">16:00 – 18:00</div>
-                  <div class="pc-status available">Available</div>
-                </div>
-                <div class="preview-fab">+ Book</div>
-              </div>
-            </div>
-          </div>
-          <div class="phone-glow"></div>
+            {% endfor %}
         </div>
-        <div class="floating-card fc-1">
-          <span class="fc-icon">⚡</span>
-          <span>Instant confirmation</span>
-        </div>
-        <div class="floating-card fc-2">
-          <span class="fc-icon">🔒</span>
-          <span>No double booking</span>
-        </div>
-      </div>
-    </div>
-    <div class="hero-wave">
-      <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
-        <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#f0f4ff"/>
-      </svg>
-    </div>
-  </section>
+    {% endif %}
+{% endwith %}
 
-  <!-- ===== FEATURES SECTION ===== -->
-  <section class="features" id="features">
-    <div class="section-container">
-      <div class="section-header">
-        <span class="section-badge">✨ Why Choose Us</span>
-        <h2 class="section-title">Why <span class="gradient-text">KehloSastra?</span></h2>
-        <p class="section-sub">Everything you need to manage campus sports bookings in one place.</p>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3>Real-time Booking</h3>
-          <p>Book courts instantly with live availability updates — no waiting, no phone calls.</p>
+<!-- ── Main Content ── -->
+<main class="main">
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Find Your Next Match 🏆</h1>
+            <p class="hero-subtitle">Join sports games happening across the SASTRA campus.</p>
+            {% if session.user_id %}
+                <a href="{{ url_for('create') }}" class="btn btn-primary btn-lg">Create a Game</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Get Started</a>
+            {% endif %}
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">🚫</div>
-          <h3>Anti Double Booking</h3>
-          <p>Smart overlap detection rejects conflicting slots automatically, keeping the system fair.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🏅</div>
-          <h3>Multi-Sport Support</h3>
-          <p>Badminton, Football, Cricket, Basketball, Tennis and more — all in one platform.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔑</div>
-          <h3>Easy Login</h3>
-          <p>Simple name-based booking — no complex registration required for SASTRA students.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔒</div>
-          <h3>Secure System</h3>
-          <p>All bookings are validated server-side. Past-date and invalid time requests are rejected.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📋</div>
-          <h3>Booking History</h3>
-          <p>Check all existing bookings for any sport and date to plan your sessions effectively.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ===== BOOKING SECTION ===== -->
-  <section class="booking-section" id="book">
-    <div class="section-container">
-      <div class="section-header">
-        <span class="section-badge">📅 Reserve Your Slot</span>
-        <h2 class="section-title">Book a <span class="gradient-text">Court</span></h2>
-        <p class="section-sub">Fill in the details below to reserve your sports slot.</p>
-      </div>
-      <div class="booking-wrapper">
-        <div class="booking-card">
-          <form id="bookingForm" novalidate>
-            <div class="form-group">
-              <label for="name">Your Name</label>
-              <input type="text" id="name" name="name" placeholder="e.g. Arjun Kumar" required autocomplete="name" />
-            </div>
-            <div class="form-group">
-              <label for="sport">Sport</label>
-              <select id="sport" name="sport" required>
-                <option value="" disabled selected>Select a sport…</option>
-                <option value="badminton">🏸 Badminton</option>
-                <option value="football">⚽ Football</option>
-                <option value="cricket">🏏 Cricket</option>
-                <option value="basketball">🏀 Basketball</option>
-                <option value="tennis">🎾 Tennis</option>
-                <option value="volleyball">🏐 Volleyball</option>
-                <option value="table-tennis">🏓 Table Tennis</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="date">Date</label>
-              <input type="date" id="date" name="date" required />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="start_time">Start Time</label>
-                <input type="time" id="start_time" name="start_time" required />
-              </div>
-              <div class="form-group">
-                <label for="end_time">End Time</label>
-                <input type="time" id="end_time" name="end_time" required />
-              </div>
-            </div>
-            <div id="formMessage" class="form-message" role="alert" aria-live="polite"></div>
-            <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
-              <span class="btn-text">Confirm Booking</span>
-              <span class="btn-spinner" hidden>
-                <svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke-width="3"/></svg>
-              </span>
-            </button>
-          </form>
+    <!-- Games Grid -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Available Games</h2>
+            <p class="section-subtitle">{{ games|length }} game{{ 's' if games|length != 1 else '' }} found</p>
         </div>
 
-        <!-- Availability Checker -->
-        <div class="availability-card" id="availability">
-          <h3>Check Availability</h3>
-          <div class="avail-form">
-            <div class="form-group">
-              <label for="avail_sport">Sport</label>
-              <select id="avail_sport">
-                <option value="" disabled selected>Select sport…</option>
-                <option value="badminton">🏸 Badminton</option>
-                <option value="football">⚽ Football</option>
-                <option value="cricket">🏏 Cricket</option>
-                <option value="basketball">🏀 Basketball</option>
-                <option value="tennis">🎾 Tennis</option>
-                <option value="volleyball">🏐 Volleyball</option>
-                <option value="table-tennis">🏓 Table Tennis</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="avail_date">Date</label>
-              <input type="date" id="avail_date" />
-            </div>
-            <button class="btn btn-outline btn-block" id="checkAvailBtn">Check Availability</button>
-          </div>
-          <div id="availResults" class="avail-results"></div>
-        </div>
-      </div>
-    </div>
-  </section>
+        {% if games %}
+            <div class="games-grid">
+                {% for game in games %}
+                    {% set slots_left = game.total_players - game.players_joined %}
+                    {% set is_full = slots_left <= 0 %}
+                    <div class="game-card {% if is_full %}game-card--full{% endif %}">
+                        <!-- Sport badge -->
+                        <div class="card-header">
+                            <span class="sport-badge">{{ game.sport }}</span>
+                            <span class="gender-badge gender-{{ game.gender|lower }}">{{ game.gender }}</span>
+                        </div>
 
-  <!-- ===== FAQ SECTION ===== -->
-  <section class="faq-section" id="faq">
-    <div class="section-container">
-      <div class="section-header">
-        <span class="section-badge">❓ Help</span>
-        <h2 class="section-title">Frequently Asked <span class="gradient-text">Questions</span></h2>
-      </div>
-      <div class="faq-list">
-        <div class="faq-item">
-          <button class="faq-question">
-            How do I book a court?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>Fill in your name, choose a sport, pick a date and time, then click "Confirm Booking". You'll get an instant confirmation message.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question">
-            What happens if my time slot overlaps?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>The system automatically detects overlapping bookings and shows an error. Use the availability checker to see existing bookings for your chosen sport and date.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question">
-            Can I book for past dates or times?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>No. The system validates all bookings and rejects requests for past dates or times that have already started.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question">
-            Which sports are supported?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>KehloSastra supports Badminton, Football, Cricket, Basketball, Tennis, Volleyball, and Table Tennis.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question">
-            Is there a time limit per booking?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>There is no hard limit set by the system, but please be considerate and book only the time you need so others can also access the courts.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+                        <!-- Card body -->
+                        <div class="card-body">
+                            <div class="card-detail">
+                                <span class="detail-icon">📅</span>
+                                <span>{{ game.date }}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="detail-icon">🕐</span>
+                                <span>{{ game.time }}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="detail-icon">📍</span>
+                                <span>{{ game.location }}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="detail-icon">👤</span>
+                                <span>Organised by {{ game.creator_name }}</span>
+                            </div>
+                        </div>
 
-  <!-- ===== CONTACT SECTION ===== -->
-  <section class="contact-section" id="contact">
-    <div class="section-container">
-      <div class="contact-card">
-        <div class="contact-info">
-          <h2>Get in <span class="gradient-text">Touch</span></h2>
-          <p>Have questions or feedback? Reach out to the KehloSastra team.</p>
-          <div class="contact-items">
-            <div class="contact-item">
-              <span class="ci-icon">📧</span>
-              <div>
-                <strong>Email</strong>
-                <span>sports@sastra.edu</span>
-              </div>
+                        <!-- Player progress -->
+                        <div class="card-footer">
+                            <div class="player-count">
+                                <div class="player-bar-wrap">
+                                    <div class="player-bar"
+                                         style="width: {{ [(game.players_joined / game.total_players * 100), 100]|min }}%">
+                                    </div>
+                                </div>
+                                <span class="player-label">
+                                    {{ game.players_joined }}/{{ game.total_players }} players
+                                </span>
+                            </div>
+                            <a href="{{ url_for('game_details', id=game.id) }}" class="btn btn-sm {% if is_full %}btn-disabled{% else %}btn-primary{% endif %}">
+                                {% if is_full %}Game Full{% else %}View &amp; Join{% endif %}
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-            <div class="contact-item">
-              <span class="ci-icon">📍</span>
-              <div>
-                <strong>Location</strong>
-                <span>SASTRA University, Thanjavur</span>
-              </div>
+        {% else %}
+            <div class="empty-state">
+                <p class="empty-icon">🏟️</p>
+                <p class="empty-text">No games yet. Be the first to create one!</p>
+                {% if session.user_id %}
+                    <a href="{{ url_for('create') }}" class="btn btn-primary">Create a Game</a>
+                {% else %}
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">Join Kehlosastra</a>
+                {% endif %}
             </div>
-            <div class="contact-item">
-              <span class="ci-icon">⏰</span>
-              <div>
-                <strong>Booking Hours</strong>
-                <span>6:00 AM – 10:00 PM</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="contact-cta">
-          <h3>Ready to play?</h3>
-          <p>Join hundreds of SASTRA students already booking smarter.</p>
-          <a href="#book" class="btn btn-primary btn-lg">Book Your Court →</a>
-        </div>
-      </div>
-    </div>
-  </section>
+        {% endif %}
+    </section>
+</main>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-brand">
-        <span class="brand-icon">🏆</span>
-        <strong>KehloSastra</strong>
-        <p>Campus Sports Booking · SASTRA University</p>
-      </div>
-      <div class="footer-links">
-        <a href="#home">Home</a>
-        <a href="#features">Features</a>
-        <a href="#book">Book</a>
-        <a href="#faq">FAQ</a>
-        <a href="#contact">Contact</a>
-      </div>
-      <div class="footer-copy">
-        <p>© 2024 KehloSastra. Built for SASTRA University students.</p>
-      </div>
-    </div>
-  </footer>
+<footer class="footer">
+    <p>© 2026 KehloSastra · Campus Sports Coordination Platform · SASTRA University</p>
+    <p class="footer-branding">a product by <img src="{{ url_for('static', filename='kadali-logo.png') }}" alt="KADALI" class="kadali-logo" /></p>
+</footer>
 
-  <script src="/static/js/app.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

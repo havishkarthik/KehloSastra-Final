@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ game.sport }} on {{ game.date }} – Kehlosastra</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{{ url_for('index') }}" class="nav-brand">
+            <img src="{{ url_for('static', filename='kehlosastra-logo.png') }}" alt="KehloSastra" class="brand-logo" />
+            <span class="brand-text">KehloSastra</span>
+        </a>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+            {% if session.user_id %}
+                <a href="{{ url_for('create') }}" class="nav-link btn-nav-create">+ Create Game</a>
+                <span class="nav-user">👤 {{ session.user_name }}</span>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                <a href="{{ url_for('register') }}" class="nav-link btn-nav-register">Register</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<!-- ── Flash Messages ── -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">
+                    <span>{{ message }}</span>
+                    <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- ── Main Content ── -->
+<main class="main">
+    <div class="details-page">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="{{ url_for('index') }}">← Back to All Games</a>
+        </div>
+
+        {% set slots_left   = game.total_players - game.players_joined %}
+        {% set is_full      = slots_left <= 0 %}
+        {% set fill_percent = [(game.players_joined / game.total_players * 100), 100]|min %}
+
+        <!-- Game header card -->
+        <div class="detail-header-card">
+            <div class="detail-badges">
+                <span class="sport-badge sport-badge--lg">{{ game.sport }}</span>
+                <span class="gender-badge gender-{{ game.gender|lower }}">{{ game.gender }}</span>
+                {% if is_full %}
+                    <span class="status-badge status-full">FULL</span>
+                {% else %}
+                    <span class="status-badge status-open">OPEN</span>
+                {% endif %}
+            </div>
+
+            <h1 class="detail-title">{{ game.sport }} Match</h1>
+
+            <div class="detail-meta-grid">
+                <div class="meta-item">
+                    <span class="meta-icon">📅</span>
+                    <div>
+                        <p class="meta-label">Date</p>
+                        <p class="meta-value">{{ game.date }}</p>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">🕐</span>
+                    <div>
+                        <p class="meta-label">Time</p>
+                        <p class="meta-value">{{ game.time }}</p>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">📍</span>
+                    <div>
+                        <p class="meta-label">Location</p>
+                        <p class="meta-value">{{ game.location }}</p>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">👤</span>
+                    <div>
+                        <p class="meta-label">Organised by</p>
+                        <p class="meta-value">{{ game.creator_name }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player progress bar -->
+            <div class="detail-progress">
+                <div class="progress-header">
+                    <span class="progress-label">Players</span>
+                    <span class="progress-count">{{ game.players_joined }}/{{ game.total_players }}</span>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar {% if is_full %}progress-bar--full{% endif %}"
+                         style="width: {{ fill_percent }}%"></div>
+                </div>
+                <p class="progress-hint">
+                    {% if is_full %}
+                        All slots are filled. Game is full!
+                    {% else %}
+                        {{ slots_left }} slot{{ 's' if slots_left != 1 else '' }} remaining
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Join / status area -->
+            <div class="join-area">
+                {% if not session.user_id %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Login to Join</a>
+
+                {% elif user_joined %}
+                    <div class="joined-badge">
+                        <span>✅ You have joined this game!</span>
+                    </div>
+
+                {% elif is_full %}
+                    <button class="btn btn-disabled btn-lg" disabled>Game Full</button>
+
+                {% else %}
+                    <form action="{{ url_for('join_game', id=game.id) }}" method="POST">
+                        <button type="submit" class="btn btn-primary btn-lg">Join Game 🎯</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Players list card -->
+        <div class="players-card">
+            <h2 class="players-title">👥 Players ({{ game.players_joined }}/{{ game.total_players }})</h2>
+
+            {% if players %}
+                <ul class="players-list">
+                    {% for player in players %}
+                        <li class="player-item">
+                            <span class="player-avatar">{{ player.name[0]|upper }}</span>
+                            <div class="player-info">
+                                <span class="player-name">{{ player.name }}</span>
+                                <span class="player-email">{{ player.email }}</span>
+                            </div>
+                            {% if loop.first %}
+                                <span class="creator-tag">Organiser</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <!-- Empty slots -->
+            {% if slots_left > 0 %}
+                <div class="empty-slots">
+                    {% for i in range(slots_left) %}
+                        <div class="empty-slot">
+                            <span class="empty-avatar">?</span>
+                            <span class="empty-slot-label">Open Slot</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</main>
+
+<footer class="footer">
+    <p>© 2026 KehloSastra · Campus Sports Coordination Platform · SASTRA University</p>
+    <p class="footer-branding">a product by <img src="{{ url_for('static', filename='kadali-logo.png') }}" alt="KADALI" class="kadali-logo" /></p>
+</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

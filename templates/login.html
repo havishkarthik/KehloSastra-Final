@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login – Kehlosastra</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{{ url_for('index') }}" class="nav-brand">
+            <img src="{{ url_for('static', filename='kehlosastra-logo.png') }}" alt="KehloSastra" class="brand-logo" />
+            <span class="brand-text">KehloSastra</span>
+        </a>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+            <a href="{{ url_for('register') }}" class="nav-link btn-nav-register">Register</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ── Flash Messages ── -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">
+                    <span>{{ message }}</span>
+                    <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- ── Main Content ── -->
+<main class="main">
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-header">
+                <span class="auth-icon">🏟️</span>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Log in with your SASTRA email</p>
+            </div>
+
+            <form action="{{ url_for('login') }}" method="POST" class="form" id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">SASTRA Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" class="form-control"
+                           placeholder="yourname@sastra.ac.in" required
+                           pattern=".*@sastra\.ac\.in$"
+                           title="Must be a @sastra.ac.in email address" />
+                    <p class="form-hint">Only @sastra.ac.in addresses are accepted.</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Log In</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <p>© 2026 KehloSastra · Campus Sports Coordination Platform · SASTRA University</p>
+    <p class="footer-branding">a product by <img src="{{ url_for('static', filename='kadali-logo.png') }}" alt="KADALI" class="kadali-logo" /></p>
+</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,5 +1,22 @@
-bookings.db
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.pyd
+
+# Database – generated at runtime, should not be committed
+database.db
+
+# Environment / virtual env
 .env
-*.db-journal
+venv/
+.venv/
+env/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+
+# macOS
+.DS_Store
