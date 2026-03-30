@@ -47,6 +47,12 @@ def init_db():
             )
             """
         )
+        db.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_bookings_sport_date
+            ON bookings (sport, date, start_time)
+            """
+        )
         db.commit()
 
 
@@ -157,18 +163,33 @@ def availability():
 
 @app.route("/admin/bookings", methods=["GET"])
 def admin_bookings():
-    db = get_db()
-    rows = db.execute(
-        "SELECT * FROM bookings ORDER BY date, sport, start_time"
+    page     = max(1, request.args.get("page", 1, type=int))
+    per_page = min(100, max(1, request.args.get("per_page", 50, type=int)))
+    offset   = (page - 1) * per_page
+
+    db    = get_db()
+    total = db.execute("SELECT COUNT(*) FROM bookings").fetchone()[0]
+    rows  = db.execute(
+        "SELECT * FROM bookings ORDER BY date, sport, start_time LIMIT ? OFFSET ?",
+        (per_page, offset),
     ).fetchall()
-    return jsonify([dict(r) for r in rows])
+    return jsonify({
+        "bookings": [dict(r) for r in rows],
+        "total":    total,
+        "page":     page,
+        "per_page": per_page,
+        "pages":    (total + per_page - 1) // per_page,
+    })
 
 
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
+# Initialise the database when the module loads (works with both `python app.py`
+# and Gunicorn which imports the module without running __main__).
+init_db()
+
 if __name__ == "__main__":
-    init_db()
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=False)

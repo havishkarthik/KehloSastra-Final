@@ -39,11 +39,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // -----------------------------------------------------------------------
   // Booking form
   // -----------------------------------------------------------------------
-  const bookingForm = document.getElementById('bookingForm');
-  const submitBtn   = document.getElementById('submitBtn');
-  const btnText     = submitBtn.querySelector('.btn-text');
-  const btnSpinner  = submitBtn.querySelector('.btn-spinner');
-  const formMessage = document.getElementById('formMessage');
+  const bookingForm    = document.getElementById('bookingForm');
+  const submitBtn      = document.getElementById('submitBtn');
+  const btnText        = submitBtn.querySelector('.btn-text');
+  const btnSpinner     = submitBtn.querySelector('.btn-spinner');
+  const formMessage    = document.getElementById('formMessage');
+
+  // Cache form inputs to avoid repeated DOM queries on each submit
+  const nameInput      = document.getElementById('name');
+  const sportSelect    = document.getElementById('sport');
+  const startTimeInput = document.getElementById('start_time');
+  const endTimeInput   = document.getElementById('end_time');
 
   function showMessage(text, type) {
     formMessage.textContent = text;
@@ -65,11 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     clearMessage();
 
-    const name       = document.getElementById('name').value.trim();
-    const sport      = document.getElementById('sport').value;
-    const date       = document.getElementById('date').value;
-    const start_time = document.getElementById('start_time').value;
-    const end_time   = document.getElementById('end_time').value;
+    const name       = nameInput.value.trim();
+    const sport      = sportSelect.value;
+    const date       = dateInput.value;
+    const start_time = startTimeInput.value;
+    const end_time   = endTimeInput.value;
 
     // Client-side quick checks
     if (!name || !sport || !date || !start_time || !end_time) {
@@ -117,12 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // -----------------------------------------------------------------------
   // Availability checker
   // -----------------------------------------------------------------------
-  const checkAvailBtn = document.getElementById('checkAvailBtn');
-  const availResults  = document.getElementById('availResults');
+  const checkAvailBtn    = document.getElementById('checkAvailBtn');
+  const availResults     = document.getElementById('availResults');
+  const availSportSelect = document.getElementById('avail_sport');
 
   checkAvailBtn.addEventListener('click', async () => {
-    const sport = document.getElementById('avail_sport').value;
-    const date  = document.getElementById('avail_date').value;
+    const sport = availSportSelect.value;
+    const date  = availDateInput.value;
 
     if (!sport || !date) {
       availResults.innerHTML = '<p class="avail-empty">Please select both a sport and a date.</p>';
@@ -167,13 +174,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // -----------------------------------------------------------------------
   // FAQ accordion
   // -----------------------------------------------------------------------
+  const faqItems = document.querySelectorAll('.faq-item');
+
   document.querySelectorAll('.faq-question').forEach(btn => {
     btn.addEventListener('click', () => {
       const item = btn.closest('.faq-item');
       const isOpen = item.classList.contains('open');
 
-      // Close all
-      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      // Close all using the cached list
+      faqItems.forEach(i => i.classList.remove('open'));
 
       // Open current if it was closed
       if (!isOpen) item.classList.add('open');
