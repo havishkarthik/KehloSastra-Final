@@ -170,6 +170,12 @@ img { max-width: 100%; display: block; }
 
 .brand-icon { font-size: 1.4rem; }
 
+.brand-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
 .nav-links {
   display: flex;
   align-items: center;
@@ -296,6 +302,7 @@ img { max-width: 100%; display: block; }
   position: relative;
   z-index: 2;
   animation: float 4s ease-in-out infinite;
+  will-change: transform;
 }
 
 @keyframes float {
@@ -404,6 +411,7 @@ img { max-width: 100%; display: block; }
   color: var(--text);
   white-space: nowrap;
   animation: float 3s ease-in-out infinite;
+  will-change: transform;
 }
 
 .fc-1 { top: 60px; left: -30px; animation-delay: .5s; }
