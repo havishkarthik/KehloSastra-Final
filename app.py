@@ -369,11 +369,15 @@ def join_game(id):
 
 
 # ──────────────────────────────────────────────
+# Initialise database on import (needed for gunicorn)
+# ──────────────────────────────────────────────
+init_db()
+
+# ──────────────────────────────────────────────
 # App entry point
 # ──────────────────────────────────────────────
 
 if __name__ == '__main__':
-    init_db()
     # Debug mode is controlled by the FLASK_DEBUG environment variable.
     # Never enable debug=True in production deployments.
     debug = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
